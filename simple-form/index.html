@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+
+    <!--<script src="scripts/jquery-1.11.3.js"></script>-->
+    <!--<script src="scripts/jquery.validate-1.13.1.js"></script>-->
+    <!--<script src="scripts/validation-methods.js"></script>-->
+    <!--<script src="scripts/validate-form.js"></script>-->
+
+    <link rel="stylesheet" href="styles/form.css"/>
+</head>
+<body>
+
+<!--
+some more fun stuff to try out...
+ 1) add jquery validation
+ 2) style the form
+ 3) do something a little more complicated in the form/backend
+ 4) maybe add database stuff
+ 5) make the form ajax enabled
+-->
+
+<p>this is just a simple form</p>
+
+<form id="myForm" action="process.php" method="post">
+
+    <div>
+        <label for="firstName">Name</label>
+        <input id="firstName" name="firstName">
+    </div>
+
+    <div>
+        <label for="food">Favorite Food</label>
+        <input id="food" name="food" type="text"/>
+    </div>
+
+    <div>
+        <input type="submit" value="Submit">
+    </div>
+
+</form>
+
+</body>
+</html>
