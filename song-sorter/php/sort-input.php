@@ -87,7 +87,21 @@ function getExistingSongs() {
 
 // need to define the sort function...
 function sortSongs($filterOption) {
+    return function($array1, $array2) use($filterOption) {
+	$result = 0;
 
+        $value1 = $array1[$filterOption];
+        $value2 = $array2[$filterOption];
+
+	if ($value1 < $value2) { 
+	    result = -1; 
+	}
+	else if ($value1 > $value2) { 
+	    result = 1; 
+	}
+
+	return $result;
+    };
 }
 
 function run() {
@@ -106,6 +120,7 @@ function run() {
         array_push($model['songs'], $insertedSong);
 
         // sort the model['songs'] array...
+	usort($model['songs'], sortSongs($model['filterOption']));
     }
 
     return $model;
