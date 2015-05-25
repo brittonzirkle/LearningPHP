@@ -1,7 +1,7 @@
 <?php
 
 require_once 'php/sort-input.php';
-
+$model = run();
 ?>
 
 <!DOCTYPE html>
@@ -29,14 +29,24 @@ require_once 'php/sort-input.php';
             </tr>
         </thead>
         <tbody>
+<?php
+if ($model['request-method'] == 'POST') {
+    // need a array null check...
+    $songCount = count($model['songs']);
+    for ($songIndex = 0; $songIndex < $songCount; $songIndex++) {
+        // should probably null check the song/artist data...
+        echo
+        "<tr>
+            <td><input name=\"songs[$songIndex][artist]\" type=\"text\" value=\"{$model['songs'][$songIndex]['artist']}\"/></td>
+            <td><input name=\"songs[$songIndex][song]\" type=\"text\" value=\"{$model['songs'][$songIndex]['song']}\"/></td>
+            <td><input name=\"songs[$songIndex][delete]\" type=\"checkbox\"/></td>
+        </tr>";
+    }
+}
+?>
         <tr>
-            <td><input name="songs[0]['artist']" type="text"/></td>
-            <td><input name="songs[0]['song']" type="text"/></td>
-            <td><input name="songs[0]['delete']" type="checkbox"/></td>
-        </tr>
-        <tr>
-            <td><input name="new-song['artist']" type="text"/></td>
-            <td><input name="new-song['song']" type="text"/></td>
+            <td><input name="new-song[artist]" type="text"/></td>
+            <td><input name="new-song[song]" type="text"/></td>
         </tr>
         </tbody>
     </table>

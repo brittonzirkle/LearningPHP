@@ -37,13 +37,12 @@ function getInsertedSong() {
 
     if (isset($_POST['new-song'])) {
         if (is_array($_POST['new-song'])) {
-            $isArtistSet = isset($_POST['new-song']['artist']);
-            $isSongSet = isset($_POST['new-song']['song']);
+            $newSongArray = $_POST['new-song'];
+            $artistValue = array_key_exists('artist', $newSongArray) ? $newSongArray['artist'] : '';
+            $songValue = array_key_exists('song', $newSongArray) ? $newSongArray['song'] : '';
 
-            if ($isArtistSet && $isSongSet) {
-                $artist = $_POST['new-song']['artist'];
-                $song = $_POST['new-song']['song'];
-                $insertedSong = array('artist'=>$artist, 'song'=>$song);
+            if ($artistValue !== '' && $songValue !== '') {
+                $insertedSong = array('artist'=>$artistValue, 'song'=>$songValue);
             }
         }
     }
@@ -52,28 +51,22 @@ function getInsertedSong() {
 }
 
 function getExistingSongs() {
-    $existingSongs = null;
+    $existingSongs = array();
 
     if (isset($_POST['songs'])) {
         if (is_array($_POST['songs'])) {
             $songs = $_POST['songs'];
             foreach ($songs as $songData) {
                 if (is_array($songData)) {
-                    $isDeleted = isset($songData['deleted']);
+                    // not really good logic here...
+                    $isDeleted = array_key_exists('delete', $songData) ? true : false;
 
                     if ($isDeleted === false) {
-                        $isArtistSet = isset($songData['artist']);
-                        $isSongSet = isset($songData['song']);
+                        $artistValue = array_key_exists('artist', $songData) ? $songData['artist'] : '';
+                        $songValue = array_key_exists('song', $songData) ? $songData['song'] : '';
 
-                        if ($isArtistSet && $isSongSet) {
-                            $artist = $songData['artist'];
-                            $song = $songData['song'];
-
-                            if ($existingSongs === null) {
-                                $existingSongs = array();
-                            }
-
-                            $songEntry = array('artist'=>$artist, 'song'=>$song);
+                        if ($artistValue !== '' && $songValue != '') {
+                            $songEntry = array('artist'=>$artistValue, 'song'=>$songValue);
                             array_push($existingSongs, $songEntry);
                         }
                     }
@@ -117,10 +110,12 @@ function run() {
         $insertedSong = getInsertedSong();
         // this should happen inside another function...
         // need to be sure model['songs'] is not null...
-        array_push($model['songs'], $insertedSong);
+        if ($insertedSong !== null) {
+            array_push($model['songs'], $insertedSong);
+        }
 
         // sort the model['songs'] array...
-	usort($model['songs'], sortSongs($model['filterOption']));
+	    usort($model['songs'], sortSongs($model['filterOption']));
     }
 
     return $model;
