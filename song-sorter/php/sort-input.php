@@ -1,121 +1,146 @@
 <?php
 
-function createModel() {
+function createModel()
+{
+    $model = array();
+
     $model['songs'] = null;
-    $model['filterOption'] = 'artist';
     $model['request-method'] = 'UNKNOWN';
+    $model['errors'] = null;
+
     return $model;
 }
 
-function getRequestMethod() {
-    $request = 'UNKNOWN';
-    $request = $_SERVER['REQUEST_METHOD'];
-    return $request;
-}
+function getFilterOption()
+{
+    $result = 'artist';
 
-function getFilterOption() {
-    $filterOption = 'artist';
-    $isFilterOptionSet = isset($_POST['filterOption']);
+    $filterOption = array_key_exists('filterOption', $_POST) ? $_POST['filterOption'] : '';
 
-    if ($isFilterOptionSet) {
-        $optionValue = $_POST['filterOption'];
-        switch ($optionValue) {
-            case 'artist':
-                $filterOption = 'artist';
-                break;
-            case 'song':
-                $filterOption = 'song';
-                break;
-        }
+    switch ($filterOption)
+    {
+        case 'artist':
+        case 'song':
+            $result = $filterOption;
+            break;
     }
 
-    return $filterOption;
+    return $result;
 }
 
-function getInsertedSong() {
+function getInsertedSong()
+{
     $insertedSong = null;
 
-    if (isset($_POST['new-song'])) {
-        if (is_array($_POST['new-song'])) {
-            $newSongArray = $_POST['new-song'];
-            $artistValue = array_key_exists('artist', $newSongArray) ? $newSongArray['artist'] : '';
-            $songValue = array_key_exists('song', $newSongArray) ? $newSongArray['song'] : '';
+    $newSongArray = array_key_exists('new-song', $_POST) ? $_POST['new-song'] : null;
 
-            if ($artistValue !== '' && $songValue !== '') {
-                $insertedSong = array('artist'=>$artistValue, 'song'=>$songValue);
-            }
+    if ($newSongArray !== null && is_array($newSongArray))
+    {
+        $artistValue = array_key_exists('artist', $newSongArray) ? $newSongArray['artist'] : '';
+        $songValue = array_key_exists('song', $newSongArray) ? $newSongArray['song'] : '';
+
+        if ($artistValue !== '' && $songValue !== '')
+        {
+            $insertedSong = array('artist'=>$artistValue, 'song'=>$songValue);
         }
     }
 
     return $insertedSong;
 }
 
-function getExistingSongs() {
-    $existingSongs = array();
+function getExistingSongs()
+{
+    $result = null;
 
-    if (isset($_POST['songs'])) {
-        if (is_array($_POST['songs'])) {
-            $songs = $_POST['songs'];
-            foreach ($songs as $songData) {
-                if (is_array($songData)) {
-                    // not really good logic here...
-                    $isDeleted = array_key_exists('delete', $songData) ? true : false;
+    $songs = array_key_exists('songs', $_POST) ? $_POST['songs'] : null;
 
-                    if ($isDeleted === false) {
-                        $artistValue = array_key_exists('artist', $songData) ? $songData['artist'] : '';
-                        $songValue = array_key_exists('song', $songData) ? $songData['song'] : '';
+    if ($songs !== null && is_array($songs))
+    {
+        foreach ($songs as $songData)
+        {
+            if (is_array($songData))
+            {
+                $isDeleted = array_key_exists('delete', $songData) ? true : false;
 
-                        if ($artistValue !== '' && $songValue != '') {
-                            $songEntry = array('artist'=>$artistValue, 'song'=>$songValue);
-                            array_push($existingSongs, $songEntry);
+                if ($isDeleted === false)
+                {
+                    $artistValue = array_key_exists('artist', $songData) ? $songData['artist'] : '';
+                    $songValue = array_key_exists('song', $songData) ? $songData['song'] : '';
+
+                    if ($artistValue !== '' && $songValue != '')
+                    {
+                        if ($result === null)
+                        {
+                            $result = array();
                         }
+
+                        array_push($result, array('artist'=>$artistValue, 'song'=>$songValue));
                     }
                 }
             }
         }
     }
 
-    return $existingSongs;
+    return $result;
 }
 
-// need to define the sort function...
-function sortSongs($filterOption) {
-    return function($array1, $array2) use($filterOption) {
-	$result = 0;
+function sortSongs($filterOption)
+{
+    return function ($array1, $array2) use($filterOption)
+    {
+        $result = 0;
 
         $value1 = $array1[$filterOption];
         $value2 = $array2[$filterOption];
 
-	if ($value1 < $value2) {
-        $result = -1;
-	}
-	else if ($value1 > $value2) {
-        $result = 1;
-	}
+        if ($value1 < $value2)
+        {
+            $result = -1;
+        }
+        else if ($value1 > $value2)
+        {
+            $result = 1;
+        }
 
-	return $result;
+        return $result;
     };
 }
 
-function run() {
-    $model = createModel();
+function getSortedSongs($existingSongs, $insertedSong, $filterOption)
+{
+    $result = $existingSongs;
 
-    $model['request-method'] = getRequestMethod();
-
-    if ($model['request-method'] === 'POST') {
-        $model['filterOption'] = getFilterOption();
-        $model['songs'] = getExistingSongs();
-
-        // need a null check here...
-        $insertedSong = getInsertedSong();
-        // this should happen inside another function...
-        // need to be sure model['songs'] is not null...
-        if ($insertedSong !== null) {
-            array_push($model['songs'], $insertedSong);
+    if ($insertedSong !== null)
+    {
+        if ($result === null)
+        {
+            $result = array();
         }
 
-        // sort the model['songs'] array...
-	    usort($model['songs'], sortSongs($model['filterOption']));
+        array_push($result, $insertedSong);
+    }
+
+    if ($result !== null)
+    {
+        usort($result, sortSongs($filterOption));
+    }
+
+    return $result;
+}
+
+function run()
+{
+    $model = createModel();
+
+    $model['request-method'] = $_SERVER['REQUEST_METHOD'];
+
+    if ($model['request-method'] === 'POST')
+    {
+        $filterOption = getFilterOption();
+        $existingSongs = getExistingSongs();
+        $insertedSong = getInsertedSong();
+
+        $model['songs'] = getSortedSongs($existingSongs, $insertedSong, $filterOption);
     }
 
     return $model;

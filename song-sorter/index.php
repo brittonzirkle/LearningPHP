@@ -31,10 +31,9 @@ $model = run();
         <tbody>
 <?php
 if ($model['request-method'] == 'POST') {
-    // need a array null check...
     $songCount = count($model['songs']);
-    for ($songIndex = 0; $songIndex < $songCount; $songIndex++) {
-        // should probably null check the song/artist data...
+    for ($songIndex = 0; $songIndex < $songCount; $songIndex++)
+    {
         echo
         "<tr>
             <td><input name=\"songs[$songIndex][artist]\" type=\"text\" value=\"{$model['songs'][$songIndex]['artist']}\"/></td>
