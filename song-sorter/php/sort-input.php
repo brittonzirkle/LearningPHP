@@ -93,11 +93,11 @@ function sortSongs($filterOption) {
         $value1 = $array1[$filterOption];
         $value2 = $array2[$filterOption];
 
-	if ($value1 < $value2) { 
-	    result = -1; 
+	if ($value1 < $value2) {
+        $result = -1;
 	}
-	else if ($value1 > $value2) { 
-	    result = 1; 
+	else if ($value1 > $value2) {
+        $result = 1;
 	}
 
 	return $result;
