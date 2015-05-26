@@ -5,7 +5,7 @@ require_once 'Vehicle.php';
 
 class VehicleList extends BaseList
 {
-    public function add($item)
+    public function add($item) 
     {
         if ($item instanceof Vehicle)
         {
