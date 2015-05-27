@@ -12,4 +12,4 @@ $animalList->add(AnimalFactory::getAnimal(AnimalFactory::DUCK));
 foreach ($animalList as $animal)
 {
     echo "The {$animal->getName()} says {$animal->says()}<br>";
-}
+} 
