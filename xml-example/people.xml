@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<people>
+    <person>
+        <name>John Doe</name>
+        <age>33</age>
+        <gender>M</gender>
+        <address>
+            <street>1234 Main St.</street>
+            <city>Happy City</city>
+            <state>AZ</state>
+            <zip>12345</zip>
+        </address>
+    </person>
+    <person>
+        <name>Jane Doe</name>
+        <age>33</age>
+        <gender>F</gender>
+        <address>
+            <street>4321 Main St.</street>
+            <city>Happier City</city>
+            <state>AZ</state>
+            <zip>54321</zip>
+        </address>
+    </person>
+</people>
