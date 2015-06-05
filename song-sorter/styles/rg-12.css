@@ -1,0 +1,49 @@
+* { margin: 0; padding: 0; }
+
+*, *:after, *:before { box-sizing: border-box; }
+
+.rg-grid:after { content: ""; display: table; clear: both; }
+
+/* the min-height: 1px is so that the columns don't stack when empty */
+[class*='rg-col-'] { float: left; min-height: 1px; }
+
+.rg-col-1  { width:   8.33%; }
+.rg-col-2  { width:  16.66%; }
+.rg-col-3  { width:  25.00%; }
+.rg-col-4  { width:  33.33%; }
+.rg-col-5  { width:  41.66%; }
+.rg-col-6  { width:  50.00%; }
+.rg-col-7  { width:  58.33%; }
+.rg-col-8  { width:  66.66%; }
+.rg-col-9  { width:  75.00%; }
+.rg-col-10 { width:  83.33%; }
+.rg-col-11 { width:  91.66%; }
+.rg-col-12 { width: 100.00%; }
+
+.rg-grid-pad-20 { padding: 20px 20px 20px 20px; }
+
+.rg-grid.rg-gutter-20 > [class*='rg-col-'] { padding-right: 20px; }
+.rg-grid.rg-gutter-20 > [class*='rg-col-']:last-of-type { padding-right: 0; }
+.rg-grid.rg-gutter-20.rg-grid-pad-20 { padding-right: 0; }
+
+/* prevent a double sized gutter when col- types are nested */
+[class*='rg-col-'] > .rg-grid > [class*='rg-col-']:last-of-type { padding-right: 0; }
+
+@media all and (max-width:650px) {
+    .rg-col-1  { width: 25%; }
+    .rg-col-2  { width: 50%; }
+    .rg-col-3  { width: 100%; }
+    .rg-col-4  { width: 100%; }
+    .rg-col-5  { width: 100%; }
+    .rg-col-6  { width: 100%; }
+    .rg-col-7  { width: 100%; }
+    .rg-col-8  { width: 100%; }
+    .rg-col-9  { width: 100%; }
+    .rg-col-10 { width: 100%; }
+    .rg-col-11 { width: 100%; }
+    .rg-col-12 { width: 100%; }
+
+    .rg-grid.rg-gutter-20 > [class*='rg-col-'] { padding-right: 0; }
+    [class*='rg-col-'] > .rg-grid > [class*='rg-col-'] { padding-right: 0; }
+    /*[class*='col-'] > .grid > [class*='col-']:last-of-type { padding-bottom: 0; }*/
+}
